@@ -31,9 +31,17 @@ public class Ec2InstanceStarter implements Starter {
 			log.error("Unfortunately something is wrong with the config and the program will exit without performing any action");
 			return;
 		}
+		
+		String ec2InstanceId = config.getEc2InstanceId();
+		
+		try {
+			ec2Service.startInstance(ec2InstanceId);
+		} catch (InterruptedException e) {
+			log.error("Ops. Something went wrong and the EC2 instance could not get started", e);
+			return;
+		}
 
-		String ec2InstanceIp = ec2Service.getInstanceIp(config
-				.getEc2InstanceId());
+		String ec2InstanceIp = ec2Service.getInstanceIp(ec2InstanceId);
 
 		boolean success = recordService.updateRecord(ec2InstanceIp);
 		if (!success) {
