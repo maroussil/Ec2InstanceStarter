@@ -14,5 +14,5 @@ IBM_JAVA_OPTIONS=
 
 JAVA_OPTS="-DINSTALL_DIR=$INSTALL_DIR"
 
-java $JAVA_OPTS -jar IpUpdater.jar
+java $JAVA_OPTS -jar Ec2InstanceStarter.jar
 

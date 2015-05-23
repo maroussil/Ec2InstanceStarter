@@ -13,7 +13,7 @@ set JAVA_OPTS=-DINSTALL_DIR=%CURRDIR%
 
 set JAVACMD=java
 
-set RUNCMD=%JAVACMD% %JAVA_OPTS% -jar IpUpdater.jar
+set RUNCMD=%JAVACMD% %JAVA_OPTS% -jar Ec2InstanceStarter.jar
 
 echo running %RUNCMD%
 %RUNCMD%
