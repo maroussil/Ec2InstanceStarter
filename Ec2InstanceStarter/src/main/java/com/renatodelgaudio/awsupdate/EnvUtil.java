@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.route53.AmazonRoute53Client;
 
@@ -76,6 +78,17 @@ public class EnvUtil {
 			throw new ConfigurationException(e.getMessage());
 		} 
 		return r53;
+	}
+	
+	public static AmazonEC2 buildEC2(File aws){
+		AmazonEC2 ec2 = null;
+		try {
+			ec2 = new AmazonEC2Client(new PropertiesCredentials(aws));
+		} catch (Exception e) {
+			log.error("Cannot build AmazonEC2Client",e);
+			throw new ConfigurationException(e.getMessage());
+		} 
+		return ec2;
 	}
 	
 }

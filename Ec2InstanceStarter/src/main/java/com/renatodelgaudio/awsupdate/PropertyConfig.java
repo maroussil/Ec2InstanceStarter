@@ -22,6 +22,7 @@
 package com.renatodelgaudio.awsupdate;
 
 import static com.renatodelgaudio.awsupdate.EnvUtil.buildRoute53;
+import static com.renatodelgaudio.awsupdate.EnvUtil.buildEC2;
 import static com.renatodelgaudio.awsupdate.EnvUtil.getAwsFilePath;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.trim;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.route53.AmazonRoute53;
 
 public class PropertyConfig implements Configuration {
@@ -45,21 +47,26 @@ public class PropertyConfig implements Configuration {
     private String recordName;
     @Value("${record.ttl}")
     private String ttl;
+    @Value("${ec2Instance.id}")
+    private String ec2InstanceId;
 
     private AmazonRoute53 r53;
+    private AmazonEC2 ec2;
 
     @Override
     public boolean isConfigOK() {
 	try{
 	    String awsPath = getAwsFilePath();
 	    r53 = buildRoute53(new File(awsPath));
+	    ec2 = buildEC2(new File(awsPath));
 
-	    boolean ok =  isNotBlank(zoneId) && isNotBlank(recordName) && isNotBlank(ttl);
+	    boolean ok =  isNotBlank(zoneId) && isNotBlank(recordName) && isNotBlank(ttl) && isNotBlank(ec2InstanceId);
 	    if(!ok) {
-		log.error("Configuration is not OK. Please check that aws.properties contains correct values for zone.id, record.name and record.ttl");
+		log.error("Configuration is not OK. Please check that aws.properties contains correct values for zone.id, record.name, record.ttl and ec2instance.id");
 		log.error("zoneId:"+zoneId);
 		log.error("recordName:"+recordName);
 		log.error("ttl:"+ttl);
+		log.error("ec2InstanceId:"+ec2InstanceId);
 	    }
 	    return ok;
 	}catch(Exception e){
@@ -77,14 +84,25 @@ public class PropertyConfig implements Configuration {
     public String getRecordName() {
 	return trim(recordName);
     }
+    
     @Override
-    public AmazonRoute53 getAmazonClient() {
+    public AmazonRoute53 getAmazonRoute53Client() {
 	return r53;
+    }
+    
+    @Override
+    public AmazonEC2 getAmazonEC2Client() {
+	return ec2;
     }
 
     @Override
     public String getTTL() {
 	return ttl;
+    }
+
+    @Override
+    public String getEc2InstanceId() {
+	return ec2InstanceId;
     }
 
 }

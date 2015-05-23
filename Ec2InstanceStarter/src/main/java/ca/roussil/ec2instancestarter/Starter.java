@@ -19,49 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.renatodelgaudio.awsupdate;
 
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.route53.AmazonRoute53;
+package ca.roussil.ec2instancestarter;
 
-public interface Configuration {
-	/**
-	 * It checks whether the config is OK
-	 * @return
-	 */
-	boolean isConfigOK();
-	/**
-	 * 
-	 * @return the zoneId
-	 */
-	String getZoneId();
-	/**
-	 * 
-	 * @return the record name
-	 */
-	String getRecordName();
-	/**
-	 * 
-	 * @return the Time To Live to use for the record configuration on AWS
-	 */
-	String getTTL();
+import org.springframework.context.ApplicationContext;
 
+/**
+ * This is the main interface that would perform the starter logic.
+ * @author Marc-André Roussil
+ *
+ */
+public interface Starter {
 	/**
-	 * 
-	 * @return the ec2InstanceId
+	 * Entry point 
+	 * @param context
 	 */
-	String getEc2InstanceId();
-	
-	/**
-	 * 
-	 * @return
-	 */
-	AmazonRoute53 getAmazonRoute53Client();
-
-	/**
-	 * 
-	 * @return
-	 */
-	AmazonEC2 getAmazonEC2Client();
+	void run(ApplicationContext context);
 
 }

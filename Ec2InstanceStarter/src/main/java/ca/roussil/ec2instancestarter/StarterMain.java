@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015 Renato Del Gaudio
+ * Copyright (c) 2015 Marc-André Roussil
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,49 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.renatodelgaudio.awsupdate;
+package ca.roussil.ec2instancestarter;
 
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.route53.AmazonRoute53;
-
-public interface Configuration {
-	/**
-	 * It checks whether the config is OK
-	 * @return
-	 */
-	boolean isConfigOK();
-	/**
-	 * 
-	 * @return the zoneId
-	 */
-	String getZoneId();
-	/**
-	 * 
-	 * @return the record name
-	 */
-	String getRecordName();
-	/**
-	 * 
-	 * @return the Time To Live to use for the record configuration on AWS
-	 */
-	String getTTL();
-
-	/**
-	 * 
-	 * @return the ec2InstanceId
-	 */
-	String getEc2InstanceId();
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+/**
+ * 
+ * @author Marc-André Roussil
+ *
+ */
+public class StarterMain {
 	
-	/**
-	 * 
-	 * @return
-	 */
-	AmazonRoute53 getAmazonRoute53Client();
+	
+	private final static Logger log = LoggerFactory.getLogger(StarterMain.class);
 
-	/**
-	 * 
-	 * @return
-	 */
-	AmazonEC2 getAmazonEC2Client();
+	public static void main( String[] args )
+	{
+		ApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
+		Starter starter =  context.getBean(Starter.class);   
 
+		log.info("Running "+starter.getClass().getName()+" ....");
+		long start = System.currentTimeMillis();
+		try{
+			starter.run(context);
+		}catch(Exception e) {
+			log.error("Opps something went wrong", e);
+		}
+		long end = System.currentTimeMillis();
+		long timeMin = (end - start) / 1000 / 60 / 60;
+		log.info(starter.getClass().getName()+" completed in "+timeMin+" sec.");
+	}
+	
 }
