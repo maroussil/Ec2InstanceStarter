@@ -22,12 +22,13 @@
 package com.renatodelgaudio.awsupdate;
 
 public interface AWSRecordService {
-	
+
 	/**
 	 * 
 	 * @return the current IP (if any) stored in aws
 	 */
 	String getCurrentIP();
+
 	/**
 	 * The aws record is updated with the given IP
 	 * 

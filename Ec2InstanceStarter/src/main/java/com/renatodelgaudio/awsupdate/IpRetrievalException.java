@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 package com.renatodelgaudio.awsupdate;
+
 /**
  * 
  * @author Renato Del Gaudio
@@ -31,27 +32,27 @@ public class IpRetrievalException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = -1603668485170032988L;
-	
+
 	private String providerName;
 
 	public IpRetrievalException() {
 		super();
-	
+
 	}
 
 	public IpRetrievalException(String message, Throwable cause) {
 		super(message, cause);
-	
+
 	}
 
 	public IpRetrievalException(String message) {
 		super(message);
-	
+
 	}
 
 	public IpRetrievalException(Throwable cause) {
 		super(cause);
-	
+
 	}
 
 	public String getProviderName() {

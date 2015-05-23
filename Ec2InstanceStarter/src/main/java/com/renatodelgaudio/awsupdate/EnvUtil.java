@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 package com.renatodelgaudio.awsupdate;
+
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.trim;
 
@@ -36,59 +37,63 @@ import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.route53.AmazonRoute53Client;
 
 public class EnvUtil {
-	
+
 	/**
-	 * This is the expected property passed to Java on boot
-	 * <br> e.g. java -DINSTALL_DIR= 
+	 * This is the expected property passed to Java on boot <br>
+	 * e.g. java -DINSTALL_DIR=
 	 */
 	public static final String PROP_INSTALL_DIR = "INSTALL_DIR";
 	public static final String PROP_AWS_FILE_NAME = "aws.properties";
-	
-	
+
 	private final static Logger log = LoggerFactory.getLogger(EnvUtil.class);
 
-	private EnvUtil(){}
+	private EnvUtil() {
+	}
+
 	/*
 	 * It returns the installation path ending with either / or \
 	 */
-	public static String INSTALL_DIR(){
+	public static String INSTALL_DIR() {
 		String root = System.getProperty(PROP_INSTALL_DIR);
-		
-		if (isBlank(root)){
-			log.error("Environment not initiazed properly. Please make sure Java is started with a not empty value for -D"+PROP_INSTALL_DIR);
-			throw new ConfigurationException("-D"+PROP_INSTALL_DIR+" is missing or empty. Program aborted");
+
+		if (isBlank(root)) {
+			log.error("Environment not initiazed properly. Please make sure Java is started with a not empty value for -D"
+					+ PROP_INSTALL_DIR);
+			throw new ConfigurationException("-D" + PROP_INSTALL_DIR
+					+ " is missing or empty. Program aborted");
 		}
 		String trim = trim(root);
-		if (!StringUtils.endsWith(trim, "/") && !StringUtils.endsWith(trim, "\\"))
+		if (!StringUtils.endsWith(trim, "/")
+				&& !StringUtils.endsWith(trim, "\\"))
 			trim += File.separator;
-		
+
 		return trim;
 	}
-	
-	public static String getAwsFilePath(){
+
+	public static String getAwsFilePath() {
 		return INSTALL_DIR() + PROP_AWS_FILE_NAME;
 	}
-	
-	public static AmazonRoute53 buildRoute53(File aws){
+
+	public static AmazonRoute53 buildRoute53(File aws) {
 		AmazonRoute53 r53 = null;
 		try {
 			r53 = new AmazonRoute53Client(new PropertiesCredentials(aws));
 		} catch (Exception e) {
-			log.error("Cannot build AmazonRouter53Client",e);
+			log.error("Cannot build AmazonRouter53Client", e);
 			throw new ConfigurationException(e.getMessage());
-		} 
+		}
 		return r53;
 	}
-	
-	public static AmazonEC2 buildEC2(File aws){
+
+	public static AmazonEC2 buildEC2(File aws) {
 		AmazonEC2 ec2 = null;
 		try {
 			ec2 = new AmazonEC2Client(new PropertiesCredentials(aws));
 		} catch (Exception e) {
-			log.error("Cannot build AmazonEC2Client",e);
+			log.error("Cannot build AmazonEC2Client", e);
 			throw new ConfigurationException(e.getMessage());
-		} 
+		}
 		return ec2;
 	}
-	
+
 }

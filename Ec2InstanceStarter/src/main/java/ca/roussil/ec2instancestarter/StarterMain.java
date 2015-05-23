@@ -25,31 +25,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 /**
  * 
  * @author Marc-André Roussil
  *
  */
 public class StarterMain {
-	
-	
-	private final static Logger log = LoggerFactory.getLogger(StarterMain.class);
 
-	public static void main( String[] args )
-	{
-		ApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
-		Starter starter =  context.getBean(Starter.class);   
+	private final static Logger log = LoggerFactory
+			.getLogger(StarterMain.class);
 
-		log.info("Running "+starter.getClass().getName()+" ....");
+	public static void main(String[] args) {
+		ApplicationContext context = new ClassPathXmlApplicationContext(
+				"spring-config.xml");
+		Starter starter = context.getBean(Starter.class);
+
+		log.info("Running " + starter.getClass().getName() + " ....");
 		long start = System.currentTimeMillis();
-		try{
+		try {
 			starter.run(context);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			log.error("Opps something went wrong", e);
 		}
 		long end = System.currentTimeMillis();
 		long timeMin = (end - start) / 1000 / 60 / 60;
-		log.info(starter.getClass().getName()+" completed in "+timeMin+" sec.");
+		log.info(starter.getClass().getName() + " completed in " + timeMin
+				+ " sec.");
 	}
-	
+
 }

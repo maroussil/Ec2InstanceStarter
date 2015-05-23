@@ -34,25 +34,28 @@ import com.google.gson.Gson;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
 public class IpInfo implements IpProvider {
-	
+
 	private final static Logger log = LoggerFactory.getLogger(IpInfo.class);
 
 	public String providerName() {
 		return "IpInfo";
 	}
-	@SuppressWarnings(value="DM_DEFAULT_ENCODING",justification="There are no other changes when the content encoding is not present in the HTTP response")
-	public String getIP() throws IpRetrievalException{
-		try{
+
+	@SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "There are no other changes when the content encoding is not present in the HTTP response")
+	public String getIP() throws IpRetrievalException {
+		try {
 			Gson gson = new Gson();
 			URL url = new URL("http://ipinfo.io/json");
 			URLConnection conn = url.openConnection();
 			String encoding = conn.getContentEncoding();
 			// open the stream and put it into BufferedReader
-			InputStreamReader isr = encoding == null ? new InputStreamReader(conn.getInputStream()) : new InputStreamReader(conn.getInputStream(),encoding);
+			InputStreamReader isr = encoding == null ? new InputStreamReader(
+					conn.getInputStream()) : new InputStreamReader(
+					conn.getInputStream(), encoding);
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
 			StringBuilder sb = new StringBuilder();
-			while ( (line = br.readLine()) != null){
+			while ((line = br.readLine()) != null) {
 				sb.append(line);
 			}
 
@@ -60,11 +63,12 @@ public class IpInfo implements IpProvider {
 
 			IpInfoBean one = gson.fromJson(sb.toString(), IpInfoBean.class);
 
-			log.info("Public IP: "+one.getIp());
+			log.info("Public IP: " + one.getIp());
 			return one.getIp();
-		}catch(Exception e){
-			log.error("Cannot get IP from "+"http://ipinfo.io/json");
-			IpRetrievalException ex = new IpRetrievalException("Cannot get IP from "+"http://ipinfo.io/json", e);
+		} catch (Exception e) {
+			log.error("Cannot get IP from " + "http://ipinfo.io/json");
+			IpRetrievalException ex = new IpRetrievalException(
+					"Cannot get IP from " + "http://ipinfo.io/json", e);
 			ex.setProviderName(providerName());
 			throw ex;
 		}

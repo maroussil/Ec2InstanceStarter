@@ -31,30 +31,33 @@ import org.slf4j.LoggerFactory;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
-
 public class IcanHazip implements IpProvider {
-	
+
 	private final static Logger log = LoggerFactory.getLogger(IcanHazip.class);
 
 	public String providerName() {
 		return "icanhazip";
 	}
-	@SuppressWarnings(value="DM_DEFAULT_ENCODING",justification="There are no other changes when the content encoding is not present in the HTTP response")
-	public String getIP() throws IpRetrievalException{
-		try{
+
+	@SuppressWarnings(value = "DM_DEFAULT_ENCODING", justification = "There are no other changes when the content encoding is not present in the HTTP response")
+	public String getIP() throws IpRetrievalException {
+		try {
 			URL url = new URL("https://icanhazip.com");
 			URLConnection conn = url.openConnection();
 			String encoding = conn.getContentEncoding();
 			// open the stream and put it into BufferedReader
-			InputStreamReader isr = encoding == null ? new InputStreamReader(conn.getInputStream()) : new InputStreamReader(conn.getInputStream(),encoding);
+			InputStreamReader isr = encoding == null ? new InputStreamReader(
+					conn.getInputStream()) : new InputStreamReader(
+					conn.getInputStream(), encoding);
 			BufferedReader br = new BufferedReader(isr);
 			String line = br.readLine();
 			br.close();
-			log.info("Public IP: "+line);
+			log.info("Public IP: " + line);
 			return line;
-		}catch(Exception e){
-			log.error("Cannot get IP from "+"https://icanhazip.com");
-			IpRetrievalException ex = new IpRetrievalException("Cannot get IP from "+"https://icanhazip.com", e);
+		} catch (Exception e) {
+			log.error("Cannot get IP from " + "https://icanhazip.com");
+			IpRetrievalException ex = new IpRetrievalException(
+					"Cannot get IP from " + "https://icanhazip.com", e);
 			ex.setProviderName(providerName());
 			throw ex;
 		}

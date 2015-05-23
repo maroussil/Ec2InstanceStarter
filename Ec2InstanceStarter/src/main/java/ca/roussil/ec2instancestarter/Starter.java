@@ -26,12 +26,14 @@ import org.springframework.context.ApplicationContext;
 
 /**
  * This is the main interface that would perform the starter logic.
+ * 
  * @author Marc-André Roussil
  *
  */
 public interface Starter {
 	/**
-	 * Entry point 
+	 * Entry point
+	 * 
 	 * @param context
 	 */
 	void run(ApplicationContext context);

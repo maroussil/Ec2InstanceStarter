@@ -33,13 +33,12 @@ import org.slf4j.LoggerFactory;
 public class IpUtil {
 
 	private final static Logger log = LoggerFactory.getLogger(IpUtil.class);
-	
-	
+
 	/**
 	 * 
 	 * @return the known IP Provider in random order
 	 */
-	public static List<IpProvider> getIpProviders(){
+	public static List<IpProvider> getIpProviders() {
 
 		IpProvider providers[] = new IpProvider[2];
 		providers[0] = new IcanHazip();
@@ -57,40 +56,47 @@ public class IpUtil {
 
 	/**
 	 * It retrieves the Public IP trying multiple providers (if needed)
+	 * 
 	 * @return
-	 * @throws IpRetrievalException if no IP can be retrieved from the available providers or an invalid IP is returned
+	 * @throws IpRetrievalException
+	 *             if no IP can be retrieved from the available providers or an
+	 *             invalid IP is returned
 	 */
-	public static String retrievePublicIP() throws IpRetrievalException{
+	public static String retrievePublicIP() throws IpRetrievalException {
 
 		List<IpProvider> providers = getIpProviders();
 		String ip = null;
 		IpProvider provider = null;
-		for(IpProvider p : providers){
-			try{
+		for (IpProvider p : providers) {
+			try {
 				provider = p;
 				ip = p.getIP();
 				break;
-			}catch(IpRetrievalException e){
-				log.error("Could not retrieve the public IP from "+provider.providerName(),e);
+			} catch (IpRetrievalException e) {
+				log.error(
+						"Could not retrieve the public IP from "
+								+ provider.providerName(), e);
 				continue;
 			}
 		}
 
-		if (!new IPAddressValidator().validate(ip)){
-			log.error(ip+ " is not a valid IP. Exiting...");
-			IpRetrievalException ex = new IpRetrievalException(ip+ " is not a valid IP. Exiting...");
+		if (!new IPAddressValidator().validate(ip)) {
+			log.error(ip + " is not a valid IP. Exiting...");
+			IpRetrievalException ex = new IpRetrievalException(ip
+					+ " is not a valid IP. Exiting...");
 			ex.setProviderName(provider.providerName());
 			throw ex;
 		}
 		// validate IP
-		if (isBlank(ip)){
+		if (isBlank(ip)) {
 			log.error("Cannot get public IP. Exiting...");
-			IpRetrievalException ex = new IpRetrievalException("Cannot get public IP. Exiting...");
+			IpRetrievalException ex = new IpRetrievalException(
+					"Cannot get public IP. Exiting...");
 			ex.setProviderName(provider.providerName());
 			throw ex;
 		}
 
-		return ip;		
+		return ip;
 	}
 
 }

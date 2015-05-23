@@ -38,71 +38,72 @@ import com.amazonaws.services.route53.AmazonRoute53;
 
 public class PropertyConfig implements Configuration {
 
-    private final static Logger log = LoggerFactory.getLogger(PropertyConfig.class);
+	private final static Logger log = LoggerFactory
+			.getLogger(PropertyConfig.class);
 
+	@Value("${zone.id}")
+	protected String zoneId;
+	@Value("${record.name}")
+	private String recordName;
+	@Value("${record.ttl}")
+	private String ttl;
+	@Value("${ec2Instance.id}")
+	private String ec2InstanceId;
 
-    @Value("${zone.id}")
-    protected String zoneId;
-    @Value("${record.name}")
-    private String recordName;
-    @Value("${record.ttl}")
-    private String ttl;
-    @Value("${ec2Instance.id}")
-    private String ec2InstanceId;
+	private AmazonRoute53 r53;
+	private AmazonEC2 ec2;
 
-    private AmazonRoute53 r53;
-    private AmazonEC2 ec2;
+	@Override
+	public boolean isConfigOK() {
+		try {
+			String awsPath = getAwsFilePath();
+			r53 = buildRoute53(new File(awsPath));
+			ec2 = buildEC2(new File(awsPath));
 
-    @Override
-    public boolean isConfigOK() {
-	try{
-	    String awsPath = getAwsFilePath();
-	    r53 = buildRoute53(new File(awsPath));
-	    ec2 = buildEC2(new File(awsPath));
-
-	    boolean ok =  isNotBlank(zoneId) && isNotBlank(recordName) && isNotBlank(ttl) && isNotBlank(ec2InstanceId);
-	    if(!ok) {
-		log.error("Configuration is not OK. Please check that aws.properties contains correct values for zone.id, record.name, record.ttl and ec2instance.id");
-		log.error("zoneId:"+zoneId);
-		log.error("recordName:"+recordName);
-		log.error("ttl:"+ttl);
-		log.error("ec2InstanceId:"+ec2InstanceId);
-	    }
-	    return ok;
-	}catch(Exception e){
-	    log.error("Wrong configuration or incomplete installation. Please try to re-install and complete the post installation configuration.");
-	    return false;
+			boolean ok = isNotBlank(zoneId) && isNotBlank(recordName)
+					&& isNotBlank(ttl) && isNotBlank(ec2InstanceId);
+			if (!ok) {
+				log.error("Configuration is not OK. Please check that aws.properties contains correct values for zone.id, record.name, record.ttl and ec2instance.id");
+				log.error("zoneId:" + zoneId);
+				log.error("recordName:" + recordName);
+				log.error("ttl:" + ttl);
+				log.error("ec2InstanceId:" + ec2InstanceId);
+			}
+			return ok;
+		} catch (Exception e) {
+			log.error("Wrong configuration or incomplete installation. Please try to re-install and complete the post installation configuration.");
+			return false;
+		}
 	}
-    }
 
-    @Override
-    public String getZoneId() {
-	return trim(zoneId);
-    }
+	@Override
+	public String getZoneId() {
+		return trim(zoneId);
+	}
 
-    @Override
-    public String getRecordName() {
-	return trim(recordName);
-    }
-    
-    @Override
-    public AmazonRoute53 getAmazonRoute53Client() {
-	return r53;
-    }
-    
-    @Override
-    public AmazonEC2 getAmazonEC2Client() {
-	return ec2;
-    }
+	@Override
+	public String getRecordName() {
+		return trim(recordName);
+	}
 
-    @Override
-    public String getTTL() {
-	return ttl;
-    }
+	@Override
+	public AmazonRoute53 getAmazonRoute53Client() {
+		return r53;
+	}
 
-    @Override
-    public String getEc2InstanceId() {
-	return ec2InstanceId;
-    }
+	@Override
+	public AmazonEC2 getAmazonEC2Client() {
+		return ec2;
+	}
+
+	@Override
+	public String getTTL() {
+		return ttl;
+	}
+
+	@Override
+	public String getEc2InstanceId() {
+		return ec2InstanceId;
+	}
 
 }

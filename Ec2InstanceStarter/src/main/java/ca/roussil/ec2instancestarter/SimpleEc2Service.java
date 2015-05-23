@@ -36,23 +36,28 @@ import com.amazonaws.services.ec2.model.Reservation;
 import com.renatodelgaudio.awsupdate.Configuration;
 
 public class SimpleEc2Service implements AWSEc2Service {
-	
-	private final static Logger log = LoggerFactory.getLogger(SimpleEc2Service.class);
-	
+
+	private final static Logger log = LoggerFactory
+			.getLogger(SimpleEc2Service.class);
+
 	@Autowired
 	Configuration config;
 
 	@Override
 	public String getInstanceIp(String ec2InstanceId) {
-		
+
 		DescribeInstancesRequest describeRequest = new DescribeInstancesRequest();
 		describeRequest.withInstanceIds(ec2InstanceId);
-		DescribeInstancesResult result = config.getAmazonEC2Client().describeInstances(describeRequest);
-		
+		DescribeInstancesResult result = config.getAmazonEC2Client()
+				.describeInstances(describeRequest);
+
 		List<Reservation> reservations = result.getReservations();
 		List<Instance> instances = reservations.get(0).getInstances();
-		if( instances.size() == 0 ) throw new RuntimeException("There is a problem, there should be an ec2 instance for id=" + ec2InstanceId);
-		
+		if (instances.size() == 0)
+			throw new RuntimeException(
+					"There is a problem, there should be an ec2 instance for id="
+							+ ec2InstanceId);
+
 		return instances.get(0).getPublicIpAddress();
 	}
 

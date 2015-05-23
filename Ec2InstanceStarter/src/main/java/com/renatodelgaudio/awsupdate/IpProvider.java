@@ -26,6 +26,7 @@ public interface IpProvider {
 	 * It returns the provider name
 	 */
 	String providerName();
+
 	/**
 	 * 
 	 * @return the Public IP address
