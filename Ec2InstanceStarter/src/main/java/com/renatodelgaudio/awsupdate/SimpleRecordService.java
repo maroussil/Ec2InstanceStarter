@@ -66,7 +66,7 @@ public class SimpleRecordService implements AWSRecordService {
 		ListResourceRecordSetsRequest request = new ListResourceRecordSetsRequest();
 		request.setHostedZoneId(config.getZoneId());
 
-		ListResourceRecordSetsResult result = config.getAmazonClient().listResourceRecordSets(request);
+		ListResourceRecordSetsResult result = config.getAmazonRoute53Client().listResourceRecordSets(request);
 		List<ResourceRecordSet> recordSets = result.getResourceRecordSets();
 
 
@@ -128,7 +128,7 @@ public class SimpleRecordService implements AWSRecordService {
 
 		log.info("Updating DNS "+recordName+" with IP "+ip);
 	
-		ChangeResourceRecordSetsResult result =  config.getAmazonClient().changeResourceRecordSets(changeRequest);
+		ChangeResourceRecordSetsResult result =  config.getAmazonRoute53Client().changeResourceRecordSets(changeRequest);
 		log.info(result.toString()); 
 		return true;
 	}
